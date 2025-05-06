@@ -58,6 +58,11 @@ class Simple_Reviews {
         return rest_ensure_response(['sentiment' => $random_sentiment, 'score' => $sentiment_scores[$random_sentiment]]);
     }
 
+    public function sentiment_score($sentiment){
+        $sentiment_scores = ['positive' => 0.9, 'negative' => 0.2, 'neutral' => 0.5];
+        return  $sentiment_scores[$sentiment];
+    }
+
     public function get_review_history() {
         $reviews = get_posts([
             'post_type'      => 'product_review',
@@ -94,9 +99,11 @@ class Simple_Reviews {
 
         $output .= '<ul>';
         foreach ($reviews as $review) {
+    
             $sentiment = get_post_meta($review->ID, 'sentiment', true) ?? 'neutral';
+            $score = $this->sentiment_score($sentiment);
             $class = ($sentiment === 'positive') ? 'review-positive' : (($sentiment === 'negative') ? 'review-negative' : '');
-            $output .= "<li class='$class'>{$review->post_title} (Sentiment: $sentiment)</li>";
+            $output .= "<li class='$class'>{$review->post_title} (Sentiment: $sentiment) (Score: $score)</li>";
         }
         $output .= '</ul>';
 
