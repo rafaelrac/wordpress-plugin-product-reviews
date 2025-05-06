@@ -12,7 +12,9 @@ if (!defined('ABSPATH')) {
 
 class Simple_Reviews {
     public function __construct() {
-        add_action('init', [$this, 'register_product_review_cpt']);        
+        add_action('init', [$this, 'register_product_review_cpt']);
+        add_action('rest_api_init', [$this, 'register_rest_routes']);
+        add_shortcode('product_reviews',[$this,'display_product_reviews']);
     }
 
  
@@ -43,6 +45,7 @@ class Simple_Reviews {
     }
 
     public function analyze_sentiment($request) {
+    
         $params = $request->get_json_params();
         $text = isset($params['text']) ? sanitize_text_field($params['text']) : '';
         
