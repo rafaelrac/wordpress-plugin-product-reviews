@@ -14,8 +14,8 @@ services:
     volumes:
       - ../config/wp-config.php:/var/www/html/wp-config.php
       - ../plugins:/var/www/html/wp-content/plugins
-      - ../scripts/post-init.sh:/post-init.sh
-    command: ["/bin/bash", "-c", "/post-init.sh && docker-entrypoint.sh apache2-foreground"]
+      - ../scripts/post-init.sh:/tmp/post-init.sh
+    command: ["/bin/bash", "-c", "cat /tmp/post-init.sh | tr -d '\r' > /post-init.sh && chmod +x /post-init.sh && /post-init.sh && docker-entrypoint.sh apache2-foreground"]
 
   db:
     image: mysql:5.7
